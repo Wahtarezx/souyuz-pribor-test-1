@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Прибор / Контент — редактор карточек</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="mark">п.</span> прибор <span class="slash">/</span> контент</a>
+    <div class="toplinks"><span class="prototype">Локальный прототип</span><a href="/docs">API ↗</a></div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">ИНСТРУМЕНТ КОНТЕНТ-МЕНЕДЖЕРА</p><h1>Из технических данных<br>в понятную карточку.</h1>
+      <p class="lead">Факты из источника. Текст от AI. Последнее слово — за редактором.</p></div>
+      <div class="principle"><span class="dot"></span><div><strong>Без догадок о характеристиках</strong><p>Пробелы в данных остаются видимыми.<br>Каждая карточка — черновик для проверки.</p></div></div>
+    </section>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+    <div class="workspace">
+      <section class="panel source">
+        <div class="panel-heading"><span class="step">01</span><h2>Исходные данные</h2><span class="muted">JSON</span></div>
+        <p class="hint">Вставьте данные товара или начните с примера из каталога.</p>
+        <div class="examples" id="examples"></div>
+        <form id="form">
+          <label for="product">Данные прибора</label>
+          <textarea id="product" class="code" spellcheck="false" required aria-describedby="source-note"></textarea>
+          <p class="hint" id="source-note">Неизвестные значения — null или пустая строка. В expected_specs укажите параметры, которые нужно проверить.</p>
+          <label for="provider">Способ подготовки</label>
+          <select id="provider"><option value="manual">ChatGPT · обмен JSON без ключа</option><option value="openai">OpenAI API · автоматически</option></select>
+          <p class="hint" id="provider-note">Сервис подготовит запрос. Передайте его ChatGPT и импортируйте ответ ниже.</p>
+          <button class="primary" id="create" type="submit">Подготовить запрос <span>↗</span></button>
+        </form>
+        <button class="demo-button" id="demo" type="button">Открыть сохранённый результат примера</button>
+        <p class="hint demo-note">Воспроизведение готового ответа ChatGPT; новая генерация не запускается.</p>
+      </section>
+      <section class="panel result-panel">
+        <div class="panel-heading"><span class="step">02</span><h2>Черновик карточки</h2><span class="badge" id="status">Ожидает данных</span></div>
+        <div id="empty" class="empty"><div class="document-icon">≡</div><h3>Здесь появится ваша карточка</h3><p>SEO-текст, характеристики и подсказки<br>для менеджера в одном месте.</p><div class="checklist"><span>Заголовок до 70 знаков</span><span>Описание 800–1200 знаков</span><span>Отметки о недостающих данных</span></div></div>
+        <div id="pending" hidden>
+          <div class="callout"><strong>Запрос готов к передаче в ChatGPT</strong><p>Скопируйте JSON задания. Попросите подготовить ответ по вложенной схеме и сохранить объект с draft_id, input_hash и content.</p></div>
+          <button id="copy-request" class="secondary" type="button">Скопировать запрос</button>
+          <details><summary>Посмотреть запрос</summary><pre id="request-preview"></pre></details>
+          <label for="completion">Ответ ChatGPT · JSON</label>
+          <textarea id="completion" class="code response-input" spellcheck="false" placeholder='{"draft_id": "…", "input_hash": "…", "content": {…}}'></textarea>
+          <div class="actions"><button class="primary" id="import" type="button">Проверить и сохранить</button><label class="file-button">Загрузить JSON<input id="upload" type="file" accept=".json,application/json"></label></div>
+        </div>
+        <div id="completed" hidden>
+          <div class="result-toolbar"><span id="provenance" class="muted"></span><div><button id="copy-json" class="small-button" type="button">Копировать JSON</button><button id="copy-md" class="small-button" type="button">Markdown ↗</button></div></div>
+          <div class="seo"><div class="section-label">SEO-ЗАГОЛОВОК <span id="title-count"></span></div><h3 id="seo-title"></h3><div class="section-label">SEO-ОПИСАНИЕ <span id="description-count"></span></div><p id="seo-description"></p></div>
+          <div class="result-section"><h3>Характеристики</h3><dl id="specs"></dl></div>
+          <div class="result-section"><h3>Поисковые запросы</h3><div id="queries" class="chips"></div></div>
+          <div class="manager"><span class="section-label">ДЛЯ МЕНЕДЖЕРА</span><p id="commercial"></p></div>
+          <div class="missing" id="missing-block"><strong>Нужно уточнить перед публикацией</strong><ul id="missing"></ul></div>
+          <details><summary>Проверить основания текста</summary><ul id="evidence"></ul><p class="hint">Проверка цитат и чисел не заменяет проверку смысла редактором.</p></details>
+        </div>
+      </section>
+    </div>
+    <section class="history"><div class="history-heading"><h2>Последние задания</h2><button id="refresh" class="small-button" type="button">Обновить ↻</button></div><div id="history-list"><p class="hint">Заданий пока нет.</p></div></section>
+    <footer><span>ПРИБОР / КОНТЕНТ</span><span>Сначала факты. Затем формулировки.</span></footer>
+  </main>
+</body>
+</html>
